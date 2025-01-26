@@ -1,5 +1,6 @@
 import { connect } from "tls";
 import { createLogger } from "../utils/logger.ts";
+import { renderTemplate } from "../utils/template.ts";
 
 const logger = createLogger("EmailService");
 
@@ -17,22 +18,43 @@ interface EmailOptions {
   from: string;
   to: string;
   subject: string;
-  text: string;
+  text?: string;
   html?: string;
+  template?: string;
+  variables?: Record<string, string>;
 }
 
 export async function sendEmail(config: EmailConfig, options: EmailOptions) {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     const socket = connect({
       host: config.host,
       port: config.port,
       rejectUnauthorized: false,
     });
 
-    let response = "";
-
     let buffer = "";
     let state = "CONNECT";
+
+    let htmlContent = options.html || "";
+    let textContent = options.text || "";
+
+    if (options.template) {
+      try {
+        htmlContent = await renderTemplate(options.template, options.variables || {});
+
+        // Generate text version if not provided
+        textContent =
+          options.text ||
+          htmlContent
+            .replace(/<[^>]+>/g, "")
+            .replace(/\s\s+/g, " ")
+            .trim();
+      } catch (error) {
+        logger.error(`Template processing failed: ${error}`);
+        reject(error);
+        return;
+      }
+    }
 
     const sendCommand = (cmd: string) => {
       logger.debug(`C: ${cmd}`);
@@ -105,12 +127,12 @@ export async function sendEmail(config: EmailConfig, options: EmailOptions) {
               "--BOUNDARY",
               "Content-Type: text/plain; charset=utf-8",
               "",
-              options.text,
+              textContent,
               "",
               "--BOUNDARY",
               "Content-Type: text/html; charset=utf-8",
               "",
-              options.html || "",
+              htmlContent,
               "--BOUNDARY--",
               ".",
             ].join("\r\n");

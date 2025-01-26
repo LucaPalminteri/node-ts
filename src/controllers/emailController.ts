@@ -11,22 +11,41 @@ export const emailController = (req: IncomingMessage, res: ServerResponse) => {
 
   req.on("end", async () => {
     try {
-      const { to, subject, text, html } = JSON.parse(body);
+      const data = JSON.parse(body);
+
+      if (!data.to || !data.subject) {
+        throw new Error("Missing required fields: 'to' and 'subject' are mandatory");
+      }
 
       await sendEmail(emailConfig, {
         from: emailConfig.auth.user,
-        to,
-        subject,
-        text,
-        html,
+        // to: data.to,
+        // subject: data.subject,
+        //text: data.text, // Optional plain text fallback
+        //html: data.html, // Optional direct HTML content
+        // template: data.template, // Template name if using
+        // variables: data.variables, // Template variables
+        to: "lucapalminteri022@gmail.com",
+        subject: "Welcome!",
+        template: "welcome",
+        variables: {
+          name: "John Doe",
+          verificationLink: "https://example.com/verify",
+        },
       });
 
       res.writeHead(200, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ success: true }));
     } catch (error) {
-      logger.error(`Error: ${error}`);
+      logger.error(`Email error: ${error}`);
+      const errorMessage = error instanceof Error ? error.message : "Failed to send email";
       res.writeHead(500, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ error: "Failed to send email" }));
+      res.end(
+        JSON.stringify({
+          error: errorMessage,
+          details: error instanceof Error ? error.stack : undefined,
+        })
+      );
     }
   });
 };
