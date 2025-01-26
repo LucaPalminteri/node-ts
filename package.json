@@ -8,7 +8,7 @@
     "test": "node src/tests/testRunner.ts"
   },
   "keywords": [],
-  "author": "",
+  "author": "Luca Palminteri",
   "license": "ISC",
   "description": "",
   "devDependencies": {

@@ -19,14 +19,13 @@ export const emailController = (req: IncomingMessage, res: ServerResponse) => {
 
       await sendEmail(emailConfig, {
         from: emailConfig.auth.user,
-        // to: data.to,
-        // subject: data.subject,
+        to: data.to,
+        subject: data.subject,
         //text: data.text, // Optional plain text fallback
         //html: data.html, // Optional direct HTML content
         // template: data.template, // Template name if using
         // variables: data.variables, // Template variables
-        to: "lucapalminteri022@gmail.com",
-        subject: "Welcome!",
+        // subject: "Welcome!",
         template: "welcome",
         variables: {
           name: "John Doe",

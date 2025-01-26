@@ -1,5 +1,8 @@
-import { emailRoutes } from "./emailRoute.ts";
+import { emailController } from "../controllers/emailController.ts";
+import { Router } from "./router.ts";
 
-export const routes = {
-  ...emailRoutes,
-};
+const router = new Router();
+
+router.post("/api/send-email", emailController);
+
+export { router };
