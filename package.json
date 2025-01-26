@@ -4,7 +4,7 @@
   "main": "src/server.ts",
   "type": "module",
   "scripts": {
-    "dev": "node --watch src/server.ts",
+    "dev": "node --watch --env-file=.env src/server.ts",
     "test": "node src/tests/testRunner.ts"
   },
   "keywords": [],
@@ -12,6 +12,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.10.10"
   }
 }

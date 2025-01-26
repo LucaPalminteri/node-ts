@@ -1,9 +1,5 @@
-import { homeRoutes } from "./homeRoutes.ts";
-import { aboutRoutes } from "./aboutRoutes.ts";
-import { apiRoutes } from "./apiRoutes.ts";
+import { emailRoutes } from "./emailRoute.ts";
 
 export const routes = {
-  ...homeRoutes,
-  ...aboutRoutes,
-  ...apiRoutes,
+  ...emailRoutes,
 };

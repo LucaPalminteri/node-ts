@@ -26,7 +26,7 @@ await Promise.all(
         passedTests++;
         log(`✅ ${file} passed`);
       } catch (error) {
-        console.error(`❌ ${file} failed: ${error.message}`);
+        console.error(`❌ ${file} failed: ${error}`);
       }
       totalTests++;
     }

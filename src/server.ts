@@ -15,7 +15,7 @@ interface Route {
 }
 
 const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
-  if (!req.url) {
+  if (!req.url || !req.method) {
     res.writeHead(400, { "Content-Type": "text/plain" });
     res.end("Bad Request: No URL provided");
     return;
@@ -23,8 +23,10 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
 
   const parsedUrl = url.parse(req.url, true);
   const path: string = parsedUrl.pathname || "/";
+  const method = req.method;
+  const routeKey = `${method} ${path}`;
 
-  const routeHandler = (routes as Route)[path];
+  const routeHandler = (routes as Route)[routeKey];
 
   if (routeHandler) {
     routeHandler(req, res);

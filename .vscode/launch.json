@@ -9,6 +9,7 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/src/server.ts",
+            "envFile": "${workspaceFolder}/.env",
             "outFiles": [
                 "${workspaceFolder}/**/*.ts"
             ]
